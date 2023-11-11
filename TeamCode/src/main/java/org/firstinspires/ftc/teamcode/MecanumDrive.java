@@ -48,9 +48,14 @@ import java.util.List;
 public final class MecanumDrive {
     public static class Params {
         // drive model parameters
-        public double inPerTick = 0;
+        public double inPerTick = 1; // 344.96372391436123915700824166763
+        // Gobilda odometry pod with 48mm diameter wheel, which is 1.88976 inches
+        // Circumference is 1.88976 * PI = 5.9368561330478476703171649599863
+        // ticks per inch = 2048 / 5.9368561330478476703171649599863 = 344.96372391436123915700824166763
+        // inches per tick = 0.00289885553371476937027205320312
+
         public double lateralInPerTick = 1;
-        public double trackWidthTicks = 0;
+        public double trackWidthTicks = 10;
 
         // feedforward parameters (in tick units)
         public double kS = 0;
@@ -192,7 +197,8 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer();
+        //localizer = new DriveLocalizer();
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap,1);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
